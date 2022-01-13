@@ -1,23 +1,31 @@
 const express = require('express');
+const cookieParser = require('cookie-parser');
+
 
 const app = express();
 
+app.use(express.urlencoded({ extended: true}));
+app.use(cookieParser());
 
 app.set('view engine', 'pug');
 
-app.get('/',(req, res) => {
-    res.render('index');
+const mainRoutes = require('./routes');
+const cardRoutes = require('./routes/cards');
+
+app.use(mainRoutes);
+app.use('/cards', cardRoutes);
+
+app.use((req, res, next) => {
+    const err = new Error('Not Found');
+    err.status = 404;
+    next(err);
 });
 
-app.get('/cards',(req, res) => {
-    res.render('card',{ prompt:'Who is buried in Grants tomb?', colors});
+app.use((err, req, res, next) => {
+    res.locals.error = err;
+    res.status(err.status);
+    res.render('error', err);
 });
-
-// Sandbox route
-app.get('/sand', (req, res) => {
-    res.render();
-})
-
 
 app.listen(3000, () => {
     console.log('The application is running on the localhost:3000')
