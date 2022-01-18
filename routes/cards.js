@@ -7,7 +7,7 @@ const { cards } = data;
 router.get('/',( req, res ) => {
     const numberOfCards = cards.length;
     const flashCardId = Math.floor(Math.random() * numberOfCards);
-    res.redirect(`/cards/${flashCardId}`);
+    res.redirect( `/cards/${flashCardId}`);
 });
 
 router.get('/:id',(req, res) => {
@@ -22,7 +22,7 @@ router.get('/:id',(req, res) => {
     const text = cards[id][side];
     const { hint } = cards[id]
     
-    const templateData = { text, id, name };
+    const templateData = { text, id, name, side };
     
     // if question is show, shown hint, if anwser is show do not show hint
    if ( side === 'question') { 
@@ -32,9 +32,9 @@ router.get('/:id',(req, res) => {
     } else if ( side === 'answer') {
        templateData.sideToShow = 'question';
        templateData.sideToDisplay = 'Question'; 
-    } else if ( side === 'hint') {
+    }   else if ( side === 'hint') {
         res.redirect(`/cards/${id}?side=question`);
-    }
+    } 
 
     res.render('card', templateData);
     

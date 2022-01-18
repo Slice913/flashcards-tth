@@ -6,7 +6,7 @@ const app = express();
 
 app.use(express.urlencoded({ extended: true}));
 app.use(cookieParser());
-app.use(express.static('public'));
+app.use('/static', express.static('public'));
 
 app.set('view engine', 'pug');
 
@@ -24,8 +24,8 @@ app.use((req, res, next) => {
 
 app.use((err, req, res, next) => {
     res.locals.error = err;
-    res.status(err.status);
-    res.render('error', err);
+     (err.status >= 100 && err.status < 600) ?  res.status(err.status) : res.render('error');
+     next();
 });
 
 app.listen(3000, () => {
